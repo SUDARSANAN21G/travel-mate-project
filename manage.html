@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Travel Mate</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #c12929;
+    }
+
+    h1 {
+      text-align: center;
+      color: #faee46;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      box-sizing: border-box;
+    }
+
+    .trip {
+      background-color: #e9f5ff;
+      padding: 15px;
+      margin: 10px 0;
+      border-left: 5px solid #2196F3;
+      border-radius: 5px;
+    }
+
+    .trip h3 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Travel Management</h1>
+  <div class="container">
+    <h2>Add a Trip</h2>
+    <input type="text" id="destination" placeholder="Destination">
+    <input type="date" id="startDate">
+    <input type="date" id="endDate">
+    <input type="number" id="cost" placeholder="Cost">
+    <button onclick="addTrip()">Add Trip</button>
+
+    <h2>Search Trips</h2>
+    <input type="text" id="search" placeholder="Search by destination" oninput="searchTrips()">
+
+    <h2>All Trips</h2>
+    <div id="tripList"></div>
+  </div>
+
+  <script>
+    const trips = [];
+
+    function addTrip() {
+      const destination = document.getElementById('destination').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const cost = parseFloat(document.getElementById('cost').value);
+
+      if (!destination || !startDate || !endDate || isNaN(cost)) {
+        alert('Please fill all fields correctly.');
+        return;
+      }
+
+      const trip = { destination, startDate, endDate, cost };
+      trips.push(trip);
+      displayTrips(trips);
+
+      // Reset form
+      document.getElementById('destination').value = '';
+      document.getElementById('startDate').value = '';
+      document.getElementById('endDate').value = '';
+      document.getElementById('cost').value = '';
+    }
+
+    function displayTrips(tripArray) {
+      const tripList = document.getElementById('tripList');
+      tripList.innerHTML = '';
+
+      if (tripArray.length === 0) {
+        tripList.innerHTML = '<p>No trips available.</p>';
+        return;
+      }
+
+      tripArray.forEach(trip => {
+        const div = document.createElement('div');
+        div.className = 'trip';
+        div.innerHTML = `
+          <h3>${trip.destination}</h3>
+          <p><strong>Start Date:</strong> ${trip.startDate}</p>
+          <p><strong>End Date:</strong> ${trip.endDate}</p>
+          <p><strong>Cost:</strong> $${trip.cost.toFixed(2)}</p>
+        `;
+        tripList.appendChild(div);
+      });
+    }
+
+    function searchTrips() {
+      const keyword = document.getElementById('search').value.toLowerCase();
+      const filtered = trips.filter(trip => trip.destination.toLowerCase().includes(keyword));
+      displayTrips(filtered);
+    }
+  </script>
+</body>
+</html>
